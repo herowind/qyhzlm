@@ -23,10 +23,13 @@ use app\alliance_api\model\AllianceOrder;
 use app\core_api\model\User;
 
 class Group extends AppController{
+    protected $uncheckLogin = ['search'];
 	// 初始化
 	public function _initialize(){
 		parent::_initialize();
-		$this->checkLogin();
+	   if(!in_array($this->request->action, $this->uncheckLogin)){
+		    $this->checkLogin();
+		}
 	}
 	
 	/**
