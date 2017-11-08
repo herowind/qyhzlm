@@ -1,4 +1,9 @@
 <?php
-//ini_set('session.cookie_domain', '.dlmicroworld.com');
-// 鍔犺浇妗嗘灦寮曞鏂囦欢
-require '../../framework/thinkphp/start.php';
+// [ 应用入口文件 ]
+namespace think;
+
+// 加载基础文件
+require __DIR__ . '/../../framework/base.php';
+
+// 执行应用并响应
+Container::get('app')->run()->send();
