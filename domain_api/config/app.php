@@ -17,10 +17,10 @@ return [
     
     'website'				=>[
         'name'			=>	'api',
-        'upload_url'        =>  'http://upload.local.qyhzlm.com',
-        'upload_path'       =>  'G:/www/qyhzlm/uploads'
-        //'upload_url'        =>  'http://upload.qyhzlm.com',
-        //'upload_path'       =>  'D:/www/qyhzlm/uploads'
+        //'upload_url'        =>  'http://upload.local.qyhzlm.com',
+        //'upload_path'       =>  'G:/www/qyhzlm/uploads'
+        'upload_url'        =>  'http://upload.qyhzlm.com',
+        'upload_path'       =>  'D:/www/qyhzlm/uploads'
     ],    
     
     'WEAPP' => [
