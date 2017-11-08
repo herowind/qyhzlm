@@ -27,7 +27,7 @@ class Group extends AppController{
 	// 初始化
 	public function _initialize(){
 		parent::_initialize();
-	   if(!in_array($this->request->action, $this->uncheckLogin)){
+	   if(!in_array($this->request->action(), $this->uncheckLogin)){
 		    $this->checkLogin();
 		}
 	}
