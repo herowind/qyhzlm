@@ -24,13 +24,13 @@ class AllianceGroup extends CommonMod{
      * 搜索社群
      */    
     public function getListPage($cond=[],$total=false){
-        $where['isveryfy'] = 1;
-        $where['isallowsearch'] = 1;
+        $where[] = ['isveryfy','=', 1];
+        $where[] = ['isallowsearch','=',1];
 //         if($search['cate_id']){
 //             $where[] = ['exp',"FIND_IN_SET({$search['cate_id']},cate_ids)"];
 //         }
         if(isset($cond['type']) && !empty($cond['type'])){
-            $where['type'] = $cond['type'];
+            $where[] = ['type','=',$cond['type']];
         }
         
         if(isset($cond['keywords']) && !empty($cond['keywords'])){
