@@ -1,0 +1,114 @@
+{extend name="common@iframe"/}
+{block name="body"}
+<div class="view-page">
+    <!-- 页面标题 -->
+    <div class="page-head">
+        <h6 class="padding-left page-head-title">车主查询
+        <span class="fr text-small text-normal padding-top">代理城市：<b class="text-main">{:session('mod_city_manage.city_title')}</b></span>
+        </h6>
+    </div>
+        
+    <div class="page-content">
+		<form name="formSearch" class="form-search form-inline" method="get" action="{:url('search')}">
+            <input type="hidden" name="code" value="{$search['code']}">
+		    <select name="area" id="area" class="form-control input-sm" data-default="请选择区域">
+		           <option value="">请选择区域</option>
+		           {foreach name="areaList" id="item"}
+		              <option value="{$item.id}" class="optCls{$item.lvl}" data-title="{$item.title}">{$item.lefthtml}{$item.title}</option>
+		           {/foreach}
+		       </select>
+		    <select name="cate" id="cate" class="form-control input-sm" data-default="请选择分类">
+		        <option value="">请选择分类</option>
+		        {foreach name="cateList" id="item"}
+		              <option value="{$item.id}" class="optCls{$item.lvl}" data-title="{$item.title}">{$item.lefthtml}{$item.title}</option>
+		           {/foreach}
+		    </select>
+		    <input type="text" name="keywords" id="keywords" class="form-control input-sm" value="{$search.keywords??''}" placeholder="信息关键词" />
+		    <button type="submit" class="btn btn-sm  btn-purple ">搜索</button>
+		    <button type="button" class="btn btn-sm  btn-purple linkto-btn" data-url="index.html?code={$search['code']}">清空条件</button>
+		    <button type="button" class="btn btn-sm  btn-success  pull-right" data-toggle="modal" onclick="popModal('{:url('pop_add',array('pid'=>0))}')" ><i class="fa fa-plus"></i> 新增车主</button>
+		</form>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class=" w5 text-center"><input type="checkbox" /></th>
+                    <th class=" w5">ID</th>
+                    <th class=" w10 ">姓名</th>
+                    <th class=" w10 ">电话</th>
+                    <th class=" w10 ">传呼号</th>
+                    <th class=" w10 ">手机验证</th>
+                    <th class=" w10 ">最后登录</th>
+                    <th class=" w10 ">登录IP</th>
+                    <th class=" w10 ">审核状态</th>
+                    <th class=" w20 text-center">操作</th>                 
+                </tr>
+            </thead>
+            <tbody>
+                {foreach name="pageData.list" item="item"}
+                <tr >
+                    <td class="text-center"><input class="margin-top-20" type="checkbox" /></td>
+                    <td>{$item.id}</tds>
+                    <td>{$item.realname}</td>
+                    <td>{$item.mobile}</td>
+                    <td>{$item.call_num}</td>
+                    <td>{$item.mobile_validated_text}</td>
+                    <td>{$item.last_login_time}</td>
+                    <td>{$item.last_login_ip}</td>
+                    <td class="text-center">
+                        <select name="status[]" id="status[]" class="form-control input-xs status" data-id="{$item.id}" data-selected="{$item.status}" style="padding:0" data-default="1">
+                            <option value="0" class="optCls1"  data-title="禁用">禁用</option>
+                            <option value="1" class="optCls1"  data-title="正常">正常</option>
+                            <option value="2" class="optCls1"  data-title="待审核">待审核</option>
+                        </select>
+                    </td>
+                    <td class="w20 text-center">
+                        <a class="text-mix confirm-rst-url-btn btn btn-xs btn-default" href="remove.html?id={$item.id}" data-info="你确定要删除吗？" title="删除"><i class="fa fa-trash"></i> 删除</a>&nbsp;
+                        <a class="text-main  btn btn-xs btn-default" href="edit.html?id={$item.id}" title="管理"><i class="fa fa-cog"></i> 管理</a>
+                    </td>
+                </tr>
+                {/foreach}
+            </tbody>
+        </table>
+        {empty name="pageData.list"}
+        <div class="non-info show">
+            <span>没查询到符合条件的记录</span>
+        </div>
+        {/empty}
+        <div class="show-page padding-big-right">
+	        <div class="page">{$pageData.page|raw}</div>
+	    </div>
+    </div>
+
+
+</div>
+{/block}
+{block name="script"}
+<script src="/lib/utils/region.js"></script>
+<script>
+var $page = {};
+
+$(function(){
+    
+    $("#area").val("{$search.area}");
+    $("#cate").val("{$search.cate}");
+	$(".status-btn").each(function(){
+        loadStatusBtn($(this));
+    })
+
+    $(".status").each(function(){
+    	$(this).val($(this).data("selected"));
+    })
+    $(".status").on("change",function(){
+    	$.post('upd_status.html',{id:$(this).data("id"),status:$(this).val()},function(data){
+    		if(data.code==1){
+    			parent.showMsg(data.msg,'success');
+    		}else{
+    			parent.showMsg(data.msg,'error');
+    		}
+    	})
+    })
+    
+})
+
+</script>
+{/block}

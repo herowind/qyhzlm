@@ -1,0 +1,79 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+    </button>
+    <h4 class="modal-title">{$detail['id']>0 ? '修改' : '新增'}表单输入项</h4>
+</div>
+<div class="modal-body">
+	<form class="form-inline form-edit border-none" id="formEdit" method="post" action="pop_edit" autocomplete="off">
+       <input type="hidden" id="id" name="id" value="{$detail.id}">
+       <input type="hidden" id="pid" name="pid" value="{$detail.pid}">
+       <div class="form-unit-style" data-title="输入项信息">
+           <div class="form-group clearfix">
+               <div class="label-zoon required">输入项名称</div>
+               <div class="input-zoon">
+				<input class="form-control width-main" type="text" id="title" name="title" value="{$detail.title}" placeholder="例如：姓名">
+               </div>
+			</div>
+			<div class="form-group clearfix">
+				<div class="label-zoon required">类型</div>
+				<div class="input-zoon">
+					<select name="type" id="type" class="form-control width-main" data-default="请选择输入类型">
+						<option value="input">单行输入框</option>
+						<option value="textarea">多行输入框</option>
+						<option value="rich">富文本</option>
+						<option value="select">单选列表</option>
+						<option value="checkbox">多选列表</option>
+						<option value="radio">状态选择</option>
+						<option value="date">日期</option>
+						<option value="time">时间</option>
+						<option value="datetime">日期+时间</option>
+						<option value="map">地图调用</option>
+						<option value="image">上传图片</option>
+						<option value="file">上传文件</option>
+					</select>               
+				</div>
+           </div>
+           <div class="form-group clearfix">
+				<div class="label-zoon required">规则</div>
+				<div class="input-zoon">
+					<input class="" type="checkbox" name="rule" value="require">必填
+					<input type="checkbox" name="rule" value="number">数字
+					<input type="checkbox" name="rule" value="mobile">手机号      
+					<input type="checkbox" name="rule" value="email">邮箱
+					<input type="checkbox" name="rule" value="email">邮箱          
+				</div>
+           </div>
+           <div class="form-group clearfix">
+               <div class="label-zoon required">样式</div>
+               <div class="input-zoon">
+				<input class="form-control width-main" type="text" id="style" name="style" value="{$detail.style}" placeholder="例如：color:#333">
+               </div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+    <span id="resultInfo" class="text-success pull-left"></span>
+    <button type="button" class="btn btn-primary" id="saveBtn">保存</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+    
+</div>
+<script type="text/javascript">
+$(function(){
+    $("#saveBtn").on("click",function(){
+        var btn = $(this);
+        btn.addClass("disabled");
+        $.post("/alliance/form/pop_edit.html",$("#formEdit").serialize()).success(function(data){
+            if(data.code==0){
+            	showMsg(data.msg,'error');
+                btn.removeClass("disabled");
+            }else if(data.code==1){
+            	popModalHide();
+            	refreshFrame();
+            }
+        });
+        return false;
+    })
+})
+</script>

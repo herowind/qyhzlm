@@ -1,0 +1,120 @@
+{extend name="common@iframe"/}
+{block name="body"}
+<div class="view-page">
+    <!-- 页面标题 -->
+    <div class="page-head">
+        <h6 class="padding-left page-head-title">黑名单
+        <span class="fr text-small text-normal padding-top">代理城市：<b class="text-main">{:session('mod_city_manage.city_title')}</b></span>
+        </h6>
+    </div>
+    <!-- 操作说明 -->
+    <div id="explanation" class="explanation" >
+        <div id="checkZoom" class="title"><i class="fa fa-lightbulb-o"></i>
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span title="收起提示" id="explanationZoom" style="display: block;"></span>
+        </div>
+        <ul>
+            <li>只需要点击半透明广告图片即可更换广告.</li>
+            <li>预览广告所在页面中选择更换你的广告</li>      
+        </ul>
+    </div>
+        
+    <div class="page-content">
+		<form name="formSearch" class="form-search form-inline" method="get" action="{:url('index')}">
+            <input type="hidden" name="code" value="{$search['code']}">
+		    <input type="text" name="keywords" id="keywords" class="form-control input-sm" value="{$search.keywords??''}" placeholder="客户昵称" />
+		    <button type="submit" class="btn btn-sm  btn-purple ">搜索</button>
+		    <button type="button" class="btn btn-sm  btn-success linkto-btn pull-right" data-url="edit.html?code={$search['code']}"><i class="fa fa-plus"></i> 添加管理员</button>
+		</form>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class=" w5 text-center"><input type="checkbox" /></th>
+                    <th class=" w5">ID</th>
+                    <th class=" w30 ">客户</th>
+                    <th class=" w30 ">累计消费</th>
+                    <th class=" w10 ">性别</th>
+                    <th class=" w10 ">地区</th>
+                    <th class=" w20 text-center">操作</th>                 
+                </tr>
+            </thead>
+            <tbody>
+                {foreach name="pageData.list" item="item"}
+                <tr >
+                    <td class="text-center"><input class="margin-top-20" type="checkbox" /></td>
+                    <td>{$item.id}</tds>
+                    <td>{$item.title}</td>
+                    <td>{$item.area_title}</td>
+                    <td>{$item.cate_title}</td>
+                    
+                    <td class="text-center">
+                        <input id="sort{$item.id}" value="{$item.sort}" class="list_order form-control input-xs" data-id="{$item.id}" data-old="{$item.sort}" data-url="updsort.html"/>
+                    </td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-xs status-btn" data-init-val="{$item['rmd']}" data-url="updstatus.html" data-id="{$item.id}" data-field="rmd"  data-status0="推荐" data-status0-css="btn-none" data-status1="推荐" data-status1-css="btn-primary"  title="点击上架或下架"></button>
+                    </td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-xs status-btn" data-init-val="{$item['hot']}" data-url="updstatus.html" data-id="{$item.id}" data-field="hot"  data-status0="热门" data-status0-css="btn-none" data-status1="热门" data-status1-css="btn-danger"  title="点击上架或下架"></button>
+                    </td>
+                    <td class="text-center">
+                        <select name="auth_check_status[]" id="auth_check_status[]" class="form-control input-xs check_status" data-id="{$item.id}" data-selected="{$item.check_status}" style="padding:0" data-default="1">
+                            <option value="0" class="optCls1"  data-title="审核拒绝">审核拒绝</option>
+                            <option value="1" class="optCls1"  data-title="新信息">新信息</option>
+                            <option value="2" class="optCls1"  data-title="审核通过">审核通过</option>
+                        </select>
+                    </td>
+                    <td class="w20 text-center">
+                        <a class="text-mix confirm-rst-url-btn btn btn-xs btn-default" href="remove.html?id={$item.id}" data-info="你确定要删除吗？" title="删除"><i class="fa fa-trash"></i> 删除</a>&nbsp;
+                        <a class="text-main  btn btn-xs btn-default" href="edit.html?id={$item.id}" title="管理"><i class="fa fa-cog"></i> 管理</a>
+                    </td>
+                </tr>
+                {/foreach}
+            </tbody>
+        </table>
+        {empty name="pageData.list"}
+        <div class="non-info show">
+            <span>没查询到符合条件的记录</span>
+        </div>
+        {/empty}
+        <div class="show-page padding-big-right">
+	        <div class="page">{$pageData.page}</div>
+	    </div>
+    </div>
+
+
+</div>
+{/block}
+{block name="script"}
+<script src="/lib/utils/region.js"></script>
+<script>
+var $page = {};
+
+$(function(){
+    
+    $("#area").val("{$search.area}");
+    $("#cate").val("{$search.cate}");
+	$(".status-btn").each(function(){
+        loadStatusBtn($(this));
+    })
+
+    $(".check_status").each(function(){
+    	$(this).val($(this).data("selected"));
+    })
+    $(".check_status").on("change",function(){
+    	$.get('checkstatus.html',{id:$(this).data("id"),check_status:$(this).val()},function(res){
+    		if(res.code==1){
+    			layer.alert(res.msg, {icon: 1}, function(index){
+    	            layer.close(index);
+    	        });
+    		}else{
+    			layer.alert(res.msg, {icon: 5}, function(index){
+                    layer.close(index);
+                });
+    		}
+    	})
+    })
+    
+})
+
+</script>
+{/block}

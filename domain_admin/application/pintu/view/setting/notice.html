@@ -1,0 +1,84 @@
+{extend name="common@iframe"/}
+{block name="body"}
+<div class="view-page">
+    <!-- 页面标题 -->
+    <div class="page-head">
+        <h6 class="padding-left page-head-title">屏幕通知
+        <span class="fr text-small text-normal padding-top">代理城市：<b class="text-main">{:session('mod_city_manage.city_title')}</b></span>
+        </h6>
+    </div>
+        
+    <div class="page-content">
+	    <form class="form-inline form-edit" id="formEdit" enctype="multipart/form-data" method="post" action="edit" autocomplete="off">
+	        <input type="hidden" id="id" name="id" value="{$detail.id}">      
+	        
+	        <div class="form-unit-style" data-title="通知设置">
+	            <h4 class="real-name-head margin-large-top text-main-deep">通知设置<span class="margin-left">屏幕底部滚动播放</span></h4>
+	            
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">通知信息</div>
+	                <div class="input-zoon">
+	                    <input class="form-control width-main" type="text" id="title" name="title" value="{$detail.qrcode.title}">
+	                    <span class="lbl">&nbsp;&nbsp;不超过100个字</span>
+	                </div>
+	            </div>
+	        </div> 
+	        
+	        <div class="form-unit-style margin-large-top" data-title="提交">
+	            <div class="form-group clearfix">
+	                <div class="label-zoon"></div>
+	                <div class="input-zoon">
+	                    <button type="submit" class="btn btn-info">立即保存</button>
+	                    <button type="button" class="btn btn-default margin-left-15">返回上页</button>
+	                </div>
+	            </div>
+	        </div>
+	    </form>
+	</div>
+
+
+</div>
+{/block}
+{block name="script"}
+<script src="/lib/utils/region.js"></script>
+<script>
+var $page = {};
+
+$(function(){
+    
+    //初始化datetimepicker插件
+    $('.datetimepicker').datetimepicker({
+        format: 'Y-m-d',
+        timepicker:false,
+        lang:"ch"
+    });
+    
+    $("#icon_start_date").on("click",function(){
+        $('#start_date').datetimepicker('show');
+    })
+    
+    $("#icon_end_date").on("click",function(){
+        $('#end_date').datetimepicker('show');
+    })
+    //初始化checkbox插件
+    $("input[name='status_check']").bootstrapSwitch();
+    $("input[name='qrcode_show_status']").bootstrapSwitch();
+    $('input[name="status_check"]').on('switchChange.bootstrapSwitch', function(event, state) {
+        if(state){
+            $("input[name='status']").val(1);
+        }else{
+            $("input[name='status']").val(0);
+        }
+    })
+    $('input[name="qrcode_show_status"]').on('switchChange.bootstrapSwitch', function(event, state) {
+        if(state){
+            $("input[name='qrcode_show_status']").val(1);
+        }else{
+            $("input[name='qrcode_show_status']").val(0);
+        }
+    })
+    
+})
+
+</script>
+{/block}

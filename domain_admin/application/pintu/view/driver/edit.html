@@ -1,0 +1,136 @@
+{extend name="common@iframe"/}
+{block name="body"}
+<div class="view-page">
+    <!-- 页面标题 -->
+    <div class="page-head">
+        <h6 class="padding-left page-head-title">修改车主信息
+        </h6>
+    </div>
+        
+    <div class="page-content">
+	    <form class="form-inline form-edit" id="formEdit" enctype="multipart/form-data" method="post" action="edit" autocomplete="off">
+	        <input type="hidden" id="id" name="id" value="{$detail.id}">
+	        <div class="form-unit-style" data-title="乘客信息">
+	            <h5 class="real-name-head margin-large-top text-main-deep">账号信息<span class="margin-left">车主的登录账号设置</span></h5>
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">司机手机</div>
+	                <div class="input-zoon">
+						<input class="form-control width-main" type="text" id="mobile" name="mobile" value="{$detail.mobile}" placeholder="请输入司机手机号">
+	                </div>
+	            </div>
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">司机姓名</div>
+	                <div class="input-zoon">
+						<input class="form-control width-main" type="text" id="realname" name="realname" value="{$detail.realname}" placeholder="请输入司机姓名">
+	                </div>
+	            </div>
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">传呼机号</div>
+	                <div class="input-zoon">
+						<input class="form-control width-main" type="text" id="call_num" name="call_num" value="{$detail.call_num}" placeholder="请输入传呼机号，没有可不填">
+	                </div>
+	            </div>
+	        </div>
+	     	<div class="form-unit-style margin-large-top" data-title="提交">
+	            <div class="form-group clearfix">
+	                <div class="label-zoon"></div>
+	                <div class="input-zoon">
+	                    <button type="submit" class="btn btn-info">立即保存</button>
+	                    <button type="button" class="btn btn-default margin-left-15">返回上页</button>
+	                </div>
+	            </div>
+	        </div>  
+	    </form>    
+	    <div class="form-inline form-edit" id="formSearch">    
+			<div class="form-unit-style" data-title="车辆管理">
+				<h5 class="real-name-head margin-large-top text-main-deep">车辆管理<span class="margin-left">一个司机可以设置多辆车</span>
+					<span class="margin-left">一个司机可以设置多辆车</span>
+					     	
+					<button class="btn btn-success btn-sm fr"  data-toggle="modal" onclick="popModal('{:url('driver_car/pop_edit',array('driver_id'=>$detail->id))}')"  >
+						<i class="fa fa-plus"></i> 新增车辆
+					</button>
+				</h5>
+
+		        <table class="table table-hover margin-mid-top">
+		            <thead>
+		                <tr>
+		                    <th class=" w5 text-center"><input type="checkbox" /></th>
+		                    <th class=" w10">车型号</th>
+		                    <th class=" w10 text-center">车牌号</th>
+		                    <th class=" w10 text-center">购买年</th>
+		                    <th class=" w10 text-center">座位数</th>
+		                    <th class=" w10 text-center">颜色</th>
+		                    <th class=" w25">备注</th>
+		                    <th class=" w10 text-center">最后更改</th>
+		                    <th class=" w10 text-center">操作</th>                 
+		                </tr>
+		            </thead>
+		            <tbody>            		            
+		                {foreach name="detail.car_list" item="item"}
+		                <tr >
+		                    <td class="text-center"><input class="margin-top-20" type="checkbox" /></td>
+		                    <td>{$item.type}</tds>
+		                    <td class="text-center">{$item.num}</td>
+		                    <td class="text-center">{$item.buy_year}</td>
+		                    <td class="text-center">{$item.seat}</td>
+		                    <td class="text-center">{$item.color}</td>
+		                    <td>{$item.remark}</td>
+		                    <td class="text-center">{$item.update_time}</td>
+		                    <td class="text-center">
+		                        <a class="text-mix confirm-rst-url-btn btn btn-xs btn-default" href="/pintu/driver_car/remove.html?id={$item.id}" data-info="你确定要删除吗？" title="删除"><i class="fa fa-trash"></i> 删除</a>&nbsp;
+		                        <a class="text-main  btn btn-xs btn-default" data-toggle="modal" onclick="popModal('/pintu/driver_car/pop_edit.html?id={$item.id}')" title="修改"><i class="fa fa-pencil"></i> 修改</a>
+		                    </td>
+		                </tr>
+		                {/foreach}
+		            </tbody>
+		        </table>	            
+			</div>
+		</div>
+	</div>
+
+
+</div>
+{/block}
+{block name="script"}
+<script src="/lib/utils/region.js"></script>
+<script>
+var $page = {};
+
+$(function(){
+    
+    //初始化datetimepicker插件
+    $('.datetimepicker').datetimepicker({
+        format: 'Y-m-d',
+        timepicker:false,
+        lang:"ch"
+    });
+    
+    $("#icon_start_date").on("click",function(){
+        $('#start_date').datetimepicker('show');
+    })
+    
+    $("#icon_end_date").on("click",function(){
+        $('#end_date').datetimepicker('show');
+    })
+    //初始化checkbox插件
+    $("input[name='status_check']").bootstrapSwitch();
+    $("input[name='qrcode_show_status']").bootstrapSwitch();
+    $('input[name="status_check"]').on('switchChange.bootstrapSwitch', function(event, state) {
+        if(state){
+            $("input[name='status']").val(1);
+        }else{
+            $("input[name='status']").val(0);
+        }
+    })
+    $('input[name="qrcode_show_status"]').on('switchChange.bootstrapSwitch', function(event, state) {
+        if(state){
+            $("input[name='qrcode_show_status']").val(1);
+        }else{
+            $("input[name='qrcode_show_status']").val(0);
+        }
+    })
+    
+})
+
+</script>
+{/block}

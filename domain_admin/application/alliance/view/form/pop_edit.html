@@ -1,0 +1,44 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+    </button>
+    <h4 class="modal-title">{$detail['id']>0 ? '修改' : '新增'}表单</h4>
+</div>
+<div class="modal-body">
+	<form class="form-inline form-edit border-none" id="formEdit" method="post" action="pop_edit" autocomplete="off">
+       <input type="hidden" id="id" name="id" value="{$detail.id}">
+       <input type="hidden" id="pid" name="pid" value="{$detail.pid}">
+       <div class="form-unit-style" data-title="车辆信息">
+           <div class="form-group clearfix">
+               <div class="label-zoon required">表单名称</div>
+               <div class="input-zoon">
+				<input class="form-control width-main" type="text" id="title" name="title" value="{$detail.title}" placeholder="例如：问卷调查">
+               </div>
+           </div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+    <span id="resultInfo" class="text-success pull-left"></span>
+    <button type="button" class="btn btn-primary" id="saveBtn">保存</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+    
+</div>
+<script type="text/javascript">
+$(function(){
+    $("#saveBtn").on("click",function(){
+        var btn = $(this);
+        btn.addClass("disabled");
+        $.post("/alliance/form/pop_edit.html",$("#formEdit").serialize()).success(function(data){
+            if(data.code==0){
+            	showMsg(data.msg,'error');
+                btn.removeClass("disabled");
+            }else if(data.code==1){
+            	popModalHide();
+            	refreshFrame();
+            }
+        });
+        return false;
+    })
+})
+</script>

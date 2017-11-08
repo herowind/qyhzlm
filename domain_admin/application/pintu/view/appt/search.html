@@ -1,0 +1,107 @@
+{extend name="common@iframe"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="/lib/components/cityselect/css/cityselect.css" />
+{/block}
+{block name="body"}
+<div class="view-page">
+    <!-- 页面标题 -->
+    <div class="page-head">
+        <h6 class="padding-left page-head-title">包车查询
+        <span class="fr text-small text-normal padding-top">代理城市：<b class="text-main">{:session('mod_city_manage.city_title')}</b></span>
+        </h6>
+    </div>
+        
+    <div class="page-content">
+		<form name="formSearch" class="form-search form-inline" method="get" action="{:url('search')}">
+		    <select class="form-control input-sm" name="type" id="type"  data-default="请选择区域">
+	           <option value="">请选择类型</option>
+	           <option value="1" {$Think.get.type==1?:'selected'}>按天包车</option>
+	           <option value="2" {$Think.get.type==2?:'selected'}>城际顺风车</option>
+	       	</select>
+			<input type="text" class="form-control input-sm"  name="from_city_name" id="from_city_name" value="{$Think.get.from_city_name??''}" placeholder="出发城市" />
+			<input type="text" class="form-control input-sm"  name="to_city_name"   id="to_city_name"   value="{$Think.get.to_city_name??''}"   placeholder="目的城市" />
+		    <input type="text" name="keywords" id="keywords" class="form-control input-sm" value="{$search.keywords??''}" placeholder="信息关键词" />
+		    <button type="submit" class="btn btn-sm  btn-purple ">搜索</button>
+		    <button type="button" class="btn btn-sm  btn-purple linkto-btn" data-url="search.html">清空条件</button>
+		    <button type="button" class="btn btn-sm  btn-success linkto-btn pull-right" data-url="edit.html?code={$search['code']}"><i class="fa fa-plus"></i> 添加{$code_title}信息</button>
+		</form>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class=" w5 text-center"><input type="checkbox" /></th>
+                    <th class=" w5">ID</th>
+                    <th class=" w10 ">类型</th>
+                    <th class=" w10 ">站点</th>
+                    <th class=" w10 ">乘客</th>
+                    <th class=" w5 ">乘客数</th>
+                    <th class=" w10 ">车类型</th>
+                    <th class=" w5 ">出车费</th>
+                    <th class=" w5 ">平台费</th>
+                    <th class=" w10 ">预约时间</th>
+                    <th class=" w5 text-center">内部单</th>
+                    <th class=" w5 text-center">分配</th>
+                    <th class=" w5 text-center">操作</th>                 
+                </tr>
+            </thead>
+            <tbody>
+                {foreach name="pageData.list" item="item"}
+                <tr >
+                    <td class="text-center"><input class="margin-top-20" type="checkbox" /></td>
+                    <td>{$item.id}</tds>
+                    <td>{$item.type_text}</td>
+                    {switch $item.type|intval }
+                    {case 2}
+                    <td>{$item.from_city_name}-{$item.to_city_name}</td>
+                    {/case}
+                    {case 1}
+                    <td>{$item.from_city_name}（{$item.cust_days}天）</td>
+                    {/case}
+                    {/switch}
+                    <td>{$item.cust_mobile}</td>
+                    <td>{$item.cust_num}</td>
+                    <td>{$item.car_type}</td>
+                    <td>{$item.car_fee}</td>
+                    <td>{$item.platform_fee}</td>
+                    <td>{$item.cust_time}</td>
+                    <td>
+						<button type="button" class="btn btn-xs status-btn" data-init-val="{$item['is_display']}" data-url="status_toggle.html" data-id="{$item.id}" data-field="is_display"  data-status0="内部单" data-status0-css="btn-none" data-status1="外部单" data-status1-css="btn-success"  title="点击是否外部单"></button>
+                    </td>
+                    <td>
+						<button type="button" class="btn btn-xs status-btn" data-init-val="{$item['is_allot']}" data-url="status_toggle.html" data-id="{$item.id}" data-field="is_allot"  data-status0="未分配" data-status0-css="btn-none" data-status1="已分配" data-status1-css="btn-danger"  title="点击是否分配"></button>
+                    </td>
+                    <td class="w20 text-center">
+                        <a class="text-mix confirm-rst-url-btn btn btn-xs btn-default" href="remove.html?id={$item.id}" data-info="你确定要删除吗？" title="删除"><i class="fa fa-trash"></i> 删除</a>&nbsp;
+                        <a class="text-main  btn btn-xs btn-default" href="edit.html?id={$item.id}" title="管理"><i class="fa fa-cog"></i> 管理</a>
+                    </td>
+                </tr>
+                {/foreach}
+            </tbody>
+        </table>
+        {empty name="pageData.list"}
+        <div class="non-info show">
+            <span>没查询到符合条件的记录</span>
+        </div>
+        {/empty}
+        <div class="show-page padding-big-right">
+	        <div class="page">{$pageData.page}</div>
+	    </div>
+    </div>
+
+
+</div>
+{/block}
+{block name="script"}
+<script src="/lib/components/cityselect/js/cityselect.js"></script>
+<script>
+var $page = {};
+var from_city_name = new Vcity.CitySelector({input:'from_city_name'});
+var to_city_name = new Vcity.CitySelector({input:'to_city_name'});
+
+$(function(){
+    $("select[name='type']").val("{$Think.get.type}");
+	$(".status-btn").each(function(){
+        loadStatusBtn($(this));
+    })
+})
+</script>
+{/block}

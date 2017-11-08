@@ -1,0 +1,285 @@
+{extend name="common@iframe"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="/lib/components/cityselect/css/cityselect.css" />
+{/block}
+{block name="body"}
+<div class="view-page">
+    <!-- 页面标题 -->
+    <div class="page-head">
+        <h6 class="padding-left page-head-title">预约包车发布
+        <span class="fr text-small text-normal padding-top">代理城市：<b class="text-main">{:session('mod_city_manage.city_title')}</b></span>
+        </h6>
+    </div>
+ 
+    <div class="page-content">
+		<ul class="nav nav-tabs" style="margin-left:1px;">
+    		<li class="{$detail.type=='1'?'active':''}" ><a href="###">按天包车</a></li>
+    		<li class="{$detail.type=='2'?'active':''}"><a href="###">城际顺风车</a></li>
+    	</ul>
+	    <form class="form-inline form-edit" id="formEdit" style="margin-top:-1px;" enctype="multipart/form-data" method="post" action="edit" autocomplete="off">
+	        <input type="hidden" id="id" name="id" value="{$detail.id}">
+	        <input type="hidden" id="type" name="type" value="{$detail.type}">
+	        <div class="form-unit-style" data-title="乘客信息">
+	            <h5 class="real-name-head margin-large-top text-main-deep">乘客信息<span class="margin-left">请务必确认乘客联系方式</span></h5>
+	            {switch $detail.type|intval }
+    				{case 1}
+			            <div class="form-group clearfix">
+			                <div class="label-zoon required">始发地</div>
+			                <div class="input-zoon">
+								<input type="text" class="form-control width-xs" id="from_city_name" name="from_city_name" value="{$detail.from_city_name}" placeholder="出发城市"/>
+								<input type="text" class="form-control width-sm" id="from_city_addr" name="from_city_addr" value="{$detail.from_city_addr}" placeholder="请输入详细地址">
+			                </div>
+			            </div>
+			            
+			            <div class="form-group clearfix hide">
+			                <div class="label-zoon required">目的地</div>
+			                <div class="input-zoon">
+								<input type="text" class="form-control width-xs" id="to_city_name" name="to_city_name" value="{$detail.to_city_name}" placeholder="目的城市"/>
+								<input type="text" class="form-control width-sm" id="to_city_addr" name="to_city_addr" value="{$detail.to_city_addr}" placeholder="请输入详细地址">
+			                </div>
+			            </div>
+			            
+						<div class="form-group clearfix">
+			                <div class="label-zoon required">选择天数</div>
+			                <div class="input-zoon">
+								<select class="form-control width-main" id="cust_day" name="cust_days" data-default="车辆类型">
+						           	<option value="0.5">半天</option>
+						           	<option value="1">1天</option>
+						           	{for start="2" end="11"}
+									<option value="{$i}">{$i}天</option>
+									{/for}
+								</select>								
+			                </div>
+			            </div>
+
+			        {/case}
+			        
+    				{case 2}
+			            <div class="form-group clearfix">
+			                <div class="label-zoon required">始发地</div>
+			                <div class="input-zoon">
+								<input type="text" class="form-control width-xs" id="from_city_name" name="from_city_name" value="{$detail.from_city_name}" placeholder="出发城市"/>
+								<input type="text" class="form-control width-sm" id="from_city_addr" name="from_city_addr" value="{$detail.from_city_addr}" placeholder="请输入详细地址">
+			                </div>
+			            </div>
+			            
+			            <div class="form-group clearfix">
+			                <div class="label-zoon required">目的地</div>
+			                <div class="input-zoon">
+								<input type="text" class="form-control width-xs" id="to_city_name" name="to_city_name" value="{$detail.to_city_name}" placeholder="目的城市"/>
+								<input type="text" class="form-control width-sm" id="to_city_addr" name="to_city_addr" value="{$detail.to_city_addr}" placeholder="请输入详细地址">
+			                </div>
+			            </div>
+			        {/case}			        
+	            {/switch}
+	            
+	            <div class="form-group clearfix">
+	                <div class="label-zoon required">出发时间</div>
+	                <div class="input-zoon">
+		                <div class="input-group width-main" >
+	                        <input type="text" class="form-control datetimepicker" id="cust_datetime" name="cust_datetime" value="{$detail.cust_datetime}" placeholder="">
+	                        <span class="input-group-addon" id="icon_cust_datetime">
+	                            <i class="fa fa-calendar"></i>
+	                        </span>
+	                    </div> 
+                    </div>
+	            </div>
+	            <div class="form-group clearfix">
+	                <div class="label-zoon required">乘客数量</div>
+	                <div class="input-zoon">
+						<input type="number" class="form-control width-main" id="cust_num" name="cust_num" value="{$detail.cust_num}" placeholder=""> 人
+	                </div>
+	            </div>
+	            <div class="form-group clearfix">
+	                <div class="label-zoon required">乘客手机</div>
+	                <div class="input-zoon">
+						<input type="text" class="form-control width-main" id="cust_mobile" name="cust_mobile" value="{$detail.cust_mobile}" placeholder="">
+	                </div>
+	            </div>
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">备注信息</div>
+	                <div class="input-zoon">
+						<input type="text" class="form-control width-main" id="cust_remark" name="cust_remark" value="{$detail.cust_remark}" placeholder="例如:王先生，带3个大行李">
+	                </div>
+	            </div>
+	        </div>
+	        
+	        <div class="form-unit-style" data-title="出车费用">
+	            <h5 class="real-name-head margin-large-top text-main-deep">出车费用<span class="margin-left">内部单:调度员分配司机；外部单：司机可以抢单</span></h5>
+	            
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">车类型</div>
+	                <div class="input-zoon">
+						<input type="text" class="form-control width-main" id="car_type" name="car_type" value="{$detail.car_type}" placeholder="例如:大巴车（30座以上），商务车GL8">
+	                </div>
+	            </div>
+	            
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">出车费</div>
+	                <div class="input-zoon">
+						<input class="form-control width-main" type="text" id="car_fee" name="car_fee" value="{$detail.car_fee}" placeholder=""> 元
+	                </div>
+	            </div>
+	            
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">平台费</div>
+	                <div class="input-zoon">
+						<input class="form-control width-main" type="text" id="platform_fee" name="platform_fee" value="{$detail.platform_fee}" placeholder=""> 元
+	                </div>
+	            </div>
+	            
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">内部单</div>
+	                <div class="input-zoon">
+	                    <input type="hidden" name="is_display" value="{$detail.is_display}">
+	                    <input class="form-control" name="is_display_check" id="is_display_check" data-on-color="success" data-on-text="外部单" data-off-color="danger" data-off-text="内部单" data-size="small" value="1" {$detail.is_display==1?'checked':''} type="checkbox" />
+	                </div>
+	            </div>
+	        </div>         
+	        
+	        <div class="form-unit-style" data-title="分配司机">
+	            <h4 class="real-name-head margin-large-top text-main-deep">抢单司机<span class="margin-left">司机支付后才可查看客户信息</span></h4>
+        		<br>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class=" w5 text-center"><input type="checkbox" /></th>
+                    <th class=" w5">传呼机</th>
+                    <th class=" w15 ">司机</th>
+                    <th class=" w15 ">电话</th>
+                    <th class=" w15 ">座驾</th>
+                    <th class=" w10 ">车牌</th>
+                    <th class=" w5 text-center">服务费</th>
+                    <th class=" w10 text-center">工单状态</th>
+                    <th class=" w20 text-center">操作</th>                 
+                </tr>
+            </thead>
+            <tbody>
+                <tr >
+                    <td class="text-center"><input class="margin-top-20" type="checkbox" /></td>
+                    <td>7732</tds>
+                    <td>王师傅</td>
+                    <td>15712368727</td>
+                    <td>劳斯莱斯幻影</td>
+                    <td>辽B 888855</td>
+                    <td class="text-center">已支付</td>
+                    <td class="text-center">成功单</td>
+                    <td class="w20 text-center">
+                        <a class="text-mix confirm-rst-url-btn btn btn-xs btn-default" href="remove.html?id={$item.id}" data-info="你确定要删除吗？" title="删除"><i class="fa fa-trash"></i> 删除</a>&nbsp;
+                        <a class="text-main  btn btn-xs btn-default" href="edit.html?id={$item.id}" title="管理"><i class="fa fa-cog"></i> 管理</a>
+                    </td>
+                </tr>  
+				<tr >
+                    <td class="text-center"><input class="margin-top-20" type="checkbox" /></td>
+                    <td>7732</tds>
+                    <td>张师傅</td>
+                    <td>15712368727</td>
+                    <td>途观</td>
+                    <td>辽B 988888</td>
+                    <td class="text-center">未支付</td>
+                    <td class="text-center">取消单</td>
+                    <td class="w20 text-center">
+                        <a class="text-mix confirm-rst-url-btn btn btn-xs btn-default" href="remove.html?id={$item.id}" data-info="你确定要删除吗？" title="删除"><i class="fa fa-trash"></i> 删除</a>&nbsp;
+                        <a class="text-main  btn btn-xs btn-default" href="edit.html?id={$item.id}" title="管理"><i class="fa fa-cog"></i> 管理</a>
+                    </td>
+                </tr>            
+            
+            
+                {foreach name="pageData.list" item="item"}
+                <tr >
+                    <td class="text-center"><input class="margin-top-20" type="checkbox" /></td>
+                    <td>{$item.id}</tds>
+                    <td>{$item.title}</td>
+                    <td>{$item.area_title}</td>
+                    <td>{$item.cate_title}</td>
+                    
+                    <td class="text-center">
+                        <input id="sort{$item.id}" value="{$item.sort}" class="list_order form-control input-xs" data-id="{$item.id}" data-old="{$item.sort}" data-url="updsort.html"/>
+                    </td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-xs status-btn" data-init-val="{$item['rmd']}" data-url="updstatus.html" data-id="{$item.id}" data-field="rmd"  data-status0="推荐" data-status0-css="btn-none" data-status1="推荐" data-status1-css="btn-primary"  title="点击上架或下架"></button>
+                    </td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-xs status-btn" data-init-val="{$item['hot']}" data-url="updstatus.html" data-id="{$item.id}" data-field="hot"  data-status0="热门" data-status0-css="btn-none" data-status1="热门" data-status1-css="btn-danger"  title="点击上架或下架"></button>
+                    </td>
+                    <td class="text-center">
+                        <select name="auth_check_status[]" id="auth_check_status[]" class="form-control input-xs check_status" data-id="{$item.id}" data-selected="{$item.check_status}" style="padding:0" data-default="1">
+                            <option value="0" class="optCls1"  data-title="审核拒绝">审核拒绝</option>
+                            <option value="1" class="optCls1"  data-title="新信息">新信息</option>
+                            <option value="2" class="optCls1"  data-title="审核通过">审核通过</option>
+                        </select>
+                    </td>
+                    <td class="w20 text-center">
+                        <a class="text-mix confirm-rst-url-btn btn btn-xs btn-default" href="remove.html?id={$item.id}" data-info="你确定要删除吗？" title="删除"><i class="fa fa-trash"></i> 删除</a>&nbsp;
+                        <a class="text-main  btn btn-xs btn-default" href="edit.html?id={$item.id}" title="管理"><i class="fa fa-cog"></i> 管理</a>
+                    </td>
+                </tr>
+                {/foreach}
+            </tbody>
+        </table>	            
+	        </div> 
+	        
+	        <div class="form-unit-style margin-large-top" data-title="提交">
+	            <div class="form-group clearfix">
+	                <div class="label-zoon"></div>
+	                <div class="input-zoon">
+	                    <button type="button" class="btn btn-info" id="saveBtn">立即保存</button>
+	                    <button type="button" class="btn btn-default margin-left-15">返回上页</button>
+	                </div>
+	            </div>
+	        </div>
+	    </form>
+	</div>
+
+
+</div>
+{/block}
+{block name="script"}
+<script src="/lib/components/cityselect/js/cityselect.js"></script>
+<script>
+var $page = {};
+var from_city_name = new Vcity.CitySelector({input:'from_city_name'});
+var to_city_name = new Vcity.CitySelector({input:'to_city_name'});
+$(function(){
+	$("#cust_days").val("{$detail.cust_days|default='1'}");
+	
+    //初始化datetimepicker插件
+    $('.datetimepicker').datetimepicker({
+        format: 'Y-m-d H:i',
+        timepicker:true,
+        step:30,
+        lang:"ch"
+    });
+    
+    $("#icon_cust_datetime").on("click",function(){
+        $('#cust_datetime').datetimepicker('show');
+    })
+
+    //初始化checkbox插件
+    $("input[name='is_display_check']").bootstrapSwitch();
+    $('input[name="is_display_check"]').on('switchChange.bootstrapSwitch', function(event, state) {
+        if(state){
+            $("input[name='is_display']").val(1);
+        }else{
+            $("input[name='is_display']").val(0);
+        }
+    }) 
+    
+	$("#saveBtn").on("click",function(){
+    	//window.frames["workspace"].window.testa();
+        var btn = $(this);
+        btn.addClass("disabled");
+        $.post("edit.html",$("#formEdit").serialize()).success(function(data){
+            if(data.code==0){
+            	parent.showMsg(data.msg,'error');
+                btn.removeClass("disabled");
+            }else if(data.code==1){
+            	parent.showMsg(data.msg,'success');
+            }
+        });
+        return false;
+    })
+})
+
+</script>
+{/block}

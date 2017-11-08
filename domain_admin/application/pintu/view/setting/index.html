@@ -1,0 +1,153 @@
+{extend name="common@iframe"/}
+{block name="body"}
+<div class="view-page">
+    <!-- 页面标题 -->
+    <div class="page-head">
+        <h6 class="padding-left page-head-title">屏幕设置
+        <span class="fr text-small text-normal padding-top">代理城市：<b class="text-main">{:session('mod_city_manage.city_title')}</b></span>
+        </h6>
+    </div>
+        
+    <div class="page-content">
+	    <form class="form-inline form-edit" id="formEdit" enctype="multipart/form-data" method="post" action="edit" autocomplete="off">
+	        <input type="hidden" id="id" name="id" value="{$detail.id}">
+	        <div class="form-unit-style" data-title="店铺基本信息">
+	            <h4 class="real-name-head margin-large-top text-main-deep">上墙信息<span class="margin-left">商家可在线上传</span></h4>
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">标题</div>
+	                <div class="input-zoon">
+	                    <input class="form-control width-main" type="text" id="title" name="title" value="{$detail.title}">
+	                </div>
+	            </div>
+	            
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">Logo</div>
+	                <div class="input-zoon fileupload-container">
+	                    <input type="hidden" name="check_logo"   value="{$detail.logo}" />
+	                    <input type="hidden" name="oldcheck_logo" class="oldcheckpic"  value="{$detail.logo}" />
+	                    <img  class="fileupload-show" src="{$detail['logo']?$detail['logo']:'/app/images/no_img.jpg'}" width="60" height="60" >&nbsp;&nbsp;
+	                    <a href="javascript:;" class="file" title="点击选择所要上传的图片"><input type="file" name="file_logo"/>选择上传文件</a>&nbsp;
+	                    <a href="javascript:;" class="file fileupload-reset" data-src="{$detail['logo']?$detail['logo']:'/app/images/no_img.jpg'}" title="还原修改前的图片">撤销修改图片</a> 
+	                    <span class="lbl">&nbsp;&nbsp;建议尺寸：500*500 1M以内</span>
+	                </div>
+	            </div>
+	            
+	            
+	            
+	            
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">二维码上墙</div>
+	                <div class="input-zoon">
+	                    <input type="hidden"  name="pay_status" value="{$detail.qrcode.show_status}">
+	                    <input name="qrcode_show_status" id="qrcode_show_status" class="form-control" data-on-color="success" data-on-text="已显示" data-off-color="danger" data-off-text="未显示" data-size="small" value="1" {$detail.pay_status==1?'checked':''} type="checkbox" />
+	                </div>
+	            </div>
+	            
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">二维码图片</div>
+	                <div class="input-zoon fileupload-container">
+	                    <input type="hidden" name="check_wx_qrcode"   value="{$detail.wx_qrcode}" />
+	                    <input type="hidden" name="oldcheck_wx_qrcode" class="oldcheckpic"  value="{$detail.wx_qrcode}" />
+	                    <img  class="fileupload-show" src="{$detail['wx_qrcode']?$detail['wx_qrcode']:'/app/images/no_img.jpg'}" width="60" height="60" >&nbsp;&nbsp;
+	                    <a href="javascript:;" class="file" title="点击选择所要上传的图片"><input type="file" name="file_wx_qrcode"/>选择上传文件</a>&nbsp;
+	                    <a href="javascript:;" class="file fileupload-reset" data-src="{$detail['wx_qrcode']?$detail['wx_qrcode']:'/app/images/no_img.jpg'}" title="还原修改前的图片">撤销修改图片</a> 
+	                    <span class="lbl">&nbsp;&nbsp;建议尺寸：500*500 1M以内</span>
+	                </div>
+	            </div>
+	            
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">二维码描述</div>
+	                <div class="input-zoon">
+	                    <input class="form-control width-main" type="text" id="title" name="title" value="{$detail.qrcode.title}">
+	                </div>
+	            </div>
+	            
+	              
+	        </div>
+	        
+	        <div class="form-unit-style" data-title="背景设置">
+	            <h4 class="real-name-head margin-large-top text-main-deep">背景设置<span class="margin-left">图片或视频</span></h4>
+	            
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">背景图片</div>
+	                <div class="input-zoon fileupload-container">
+	                    <input type="hidden" name="check_banner"   value="{$detail.banner}" />
+	                    <input type="hidden" name="oldcheck_banner" class="oldcheckpic"  value="{$detail.banner}" />
+	                    <img  class="fileupload-show" src="{$detail['banner']?$detail['banner']:'/app/images/no_img.jpg'}" width="60" height="60" >&nbsp;&nbsp;
+	                    <a href="javascript:;" class="file" title="点击选择所要上传的图片"><input type="file" name="file_banner"/>选择上传文件</a>&nbsp;
+	                    <a href="javascript:;" class="file fileupload-reset" data-src="{$detail['banner']?$detail['banner']:'/app/images/no_img.jpg'}" title="还原修改前的图片">撤销修改图片</a> 
+	                    <span class="lbl">&nbsp;&nbsp;建议尺寸：600*300</span>
+	                </div>
+	            </div>
+	        </div>          
+	        
+	        <div class="form-unit-style" data-title="消息设置">
+	            <h4 class="real-name-head margin-large-top text-main-deep">消息设置<span class="margin-left">默认2秒刷新一次</span></h4>
+	            
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">刷新间隔</div>
+	                <div class="input-zoon">
+	                    <input class="form-control width-main" type="text" id="title" name="title" value="{$detail.qrcode.title}">
+	                    <span class="lbl">&nbsp;&nbsp;秒</span>
+	                </div>
+	            </div>
+	        </div> 
+	        
+	        <div class="form-unit-style margin-large-top" data-title="提交">
+	            <div class="form-group clearfix">
+	                <div class="label-zoon"></div>
+	                <div class="input-zoon">
+	                    <button type="submit" class="btn btn-info">立即保存</button>
+	                    <button type="button" class="btn btn-default margin-left-15">返回上页</button>
+	                </div>
+	            </div>
+	        </div>
+	    </form>
+	</div>
+
+
+</div>
+{/block}
+{block name="script"}
+<script src="/lib/utils/region.js"></script>
+<script>
+var $page = {};
+
+$(function(){
+    
+    //初始化datetimepicker插件
+    $('.datetimepicker').datetimepicker({
+        format: 'Y-m-d',
+        timepicker:false,
+        lang:"ch"
+    });
+    
+    $("#icon_start_date").on("click",function(){
+        $('#start_date').datetimepicker('show');
+    })
+    
+    $("#icon_end_date").on("click",function(){
+        $('#end_date').datetimepicker('show');
+    })
+    //初始化checkbox插件
+    $("input[name='status_check']").bootstrapSwitch();
+    $("input[name='qrcode_show_status']").bootstrapSwitch();
+    $('input[name="status_check"]').on('switchChange.bootstrapSwitch', function(event, state) {
+        if(state){
+            $("input[name='status']").val(1);
+        }else{
+            $("input[name='status']").val(0);
+        }
+    })
+    $('input[name="qrcode_show_status"]').on('switchChange.bootstrapSwitch', function(event, state) {
+        if(state){
+            $("input[name='qrcode_show_status']").val(1);
+        }else{
+            $("input[name='qrcode_show_status']").val(0);
+        }
+    })
+    
+})
+
+</script>
+{/block}

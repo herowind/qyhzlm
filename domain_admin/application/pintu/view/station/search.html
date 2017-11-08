@@ -1,0 +1,95 @@
+{extend name="common@iframe"/}
+{block name="body"}
+<div class="view-page">
+    <!-- 页面标题 -->
+    <div class="page-head">
+        <h6 class="padding-left page-head-title">站点查询
+        <span class="fr text-small text-normal padding-top">代理城市：<b class="text-main">{:session('mod_city_manage.city_title')}</b></span>
+        </h6>
+    </div>
+        
+    <div class="page-content">
+		<form name="formSearch" class="form-search form-inline" method="get" action="{:url('search')}">
+		    <select name="is_hot" id="is_hot" class="form-control input-sm" data-default="筛选标签">
+				<option value="">选择是否热门</option>
+				<option value="1" data-title="热门">热门</option>
+				<option value="0" data-title="正常">正常</option>
+			</select>
+		    <select name="is_display" id="is_display" class="form-control input-sm" data-default="显示状态">
+		        <option value="">选择是否显示</option>
+				<option value="1"  data-title="显示">显示</option>
+				<option value="0"  data-title="隐藏">隐藏</option>
+		    </select>
+		    <input type="text" name="keywords" id="keywords" class="form-control input-sm" value="{$Think.get.keywords??''}" placeholder="信息关键词" />
+		    <button type="submit" class="btn btn-sm  btn-purple ">搜索</button>
+		    <button type="button" class="btn btn-sm  btn-purple linkto-btn" data-url="search.html">清空条件</button>
+		    <button type="button" class="btn btn-sm  btn-success  pull-right" data-toggle="modal" onclick="popModal('{:url('pop_edit',array('pid'=>0))}')" ><i class="fa fa-plus"></i> 新增站点</button>
+		</form>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class=" w5 text-center"><input type="checkbox" /></th>
+                    <th class=" w5">ID</th>
+                    <th class=" w10 ">中文站点</th>
+                    <th class=" w10 ">拼音站点</th>
+                    <th class=" w10 ">速查站点</th>
+                    <th class=" w10 ">热门</th>
+                    <th class=" w10 ">显示状态</th>
+                    <th class=" w10 ">排序</th>
+                    <th class=" w20 ">更新时间</th>
+                    <th class=" w20 text-center">操作</th>                 
+                </tr>
+            </thead>
+            <tbody>
+                {foreach name="pageData.list" item="item"}
+                <tr >
+                    <td class="text-center"><input class="margin-top-20" type="checkbox" /></td>
+                    <td>{$item.id}</tds>
+                    <td>{$item.name}</td>
+                    <td>{$item.name_pinyin}</td>
+                    <td>{$item.name_quick}</td>
+                    <td>
+						<button type="button" class="btn btn-xs status-btn" data-init-val="{$item['is_hot']}" data-url="status_toggle.html" data-id="{$item.id}" data-field="is_hot"  data-status0="普通" data-status0-css="btn-none" data-status1="热门" data-status1-css="btn-danger"  title="点击是否热门"></button>
+                    </td>
+                    <td>
+						<button type="button" class="btn btn-xs status-btn" data-init-val="{$item['is_display']}" data-url="status_toggle.html" data-id="{$item.id}" data-field="is_display"  data-status0="隐藏" data-status0-css="btn-none" data-status1="显示" data-status1-css="btn-success"  title="点击是否热门"></button>
+                    </td>
+                    <td>{$item.sort}</td>
+                    <td>{$item.update_time}</td>
+                    <td class="text-center">
+                        <a class="text-mix confirm-rst-url-btn btn btn-xs btn-default" href="remove.html?id={$item.id}" data-info="你确定要删除吗？" title="删除"><i class="fa fa-trash"></i> 删除</a>&nbsp;
+                        <a class="text-main  btn btn-xs btn-default" href="###" data-toggle="modal" onclick="popModal('/pintu/station/pop_edit/id/{$item.id}')"  title="修改"><i class="fa fa-cog"></i> 修改</a>
+                    </td>
+                </tr>
+                {/foreach}
+            </tbody>
+        </table>
+        {empty name="pageData.list"}
+        <div class="non-info show">
+            <span>没查询到符合条件的记录</span>
+        </div>
+        {/empty}
+        <div class="show-page padding-big-right">
+	        <div class="page">{$pageData.page|raw}</div>
+	    </div>
+    </div>
+
+
+</div>
+{/block}
+{block name="script"}
+<script src="/lib/utils/region.js"></script>
+<script>
+var $page = {};
+
+$(function(){
+    
+    $("select[name='is_hot']").val("{$Think.get.is_hot}");
+    $("select[name='is_display']").val("{$Think.get.is_display}");
+	$(".status-btn").each(function(){
+        loadStatusBtn($(this));
+    })
+})
+
+</script>
+{/block}

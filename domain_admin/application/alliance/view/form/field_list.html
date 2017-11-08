@@ -1,0 +1,66 @@
+{extend name="common@iframe"/}
+{block name="body"}
+<div class="view-page">
+    <!-- 页面标题 -->
+    <div class="page-head">
+        <h6 class="padding-left page-head-title">表单名称：{$form.title}
+        <span class="fr text-small text-normal padding-top">代理城市：<b class="text-main">{:session('mod_city_manage.city_title')}</b></span>
+        </h6>
+    </div>
+        
+    <div class="page-content">
+        <table class="table table-hover margin-mid-top">
+            <thead>
+                <tr>
+                    <th class=" w5 text-center"><input type="checkbox" /></th>
+                    <th class=" w5">ID</th>
+                    <th class=" w20 ">字段名称</th>
+                    <th class=" w10 ">类型</th>
+                    <th class=" w20 ">验证规则</th>
+                    <th class=" w10 ">排序</th>
+                    <th class=" w10 ">更新时间</th>
+                    <th class=" w20 text-center">操作</th>                 
+                </tr>
+            </thead>
+            <tbody>
+                {foreach name="form.field_list" item="item"}
+                <tr >
+                    <td class="text-center"><input class="margin-top-20" type="checkbox" /></td>
+                    <td>{$item.id}</tds>
+                    <td>{$item.title}</td>
+                    <td>{$item.type}</td>
+                    <td>{$item.rule}</td>
+                    <td>	                    
+                    	<input id="sort{$item.id}" value="{$item.sort}" class="list_order form-control input-xs" data-id="{$item.id}" data-old="{$item.sort}" data-url="edit_sort.html"/>
+					</td>
+                    <td>{$item.update_time}</td>
+                    <td class="text-center">
+                        <a class="text-mix confirm-rst-url-btn btn btn-xs btn-default" href="remove.html?id={$item.id}" data-info="你确定要删除吗？" title="删除"><i class="fa fa-trash"></i> 删除</a>&nbsp;
+                        <a class="text-main  btn btn-xs btn-default" href="###" data-toggle="modal" onclick="popModal('/alliance/form/field_edit/id/{$item.id}')"  title="修改"><i class="fa fa-pencil"></i> 修改</a>
+                    </td>
+                </tr>
+                {/foreach}
+            </tbody>
+        </table>
+        <div class="non-info show">
+            <button type="button" class="btn btn-sm  btn-success" data-toggle="modal" onclick="popModal('{:url('field_edit',array('pid'=>$form['id']))}')" ><i class="fa fa-plus"></i> 新增输入项</button>
+        </div>
+    </div>
+
+
+</div>
+{/block}
+{block name="script"}
+<script src="/lib/utils/region.js"></script>
+<script>
+var $page = {};
+
+$(function(){
+    
+	$(".status-btn").each(function(){
+        loadStatusBtn($(this));
+    })
+})
+
+</script>
+{/block}

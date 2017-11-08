@@ -1,0 +1,98 @@
+{extend name="common@iframe"/}
+{block name="style"}<link rel="stylesheet" href="/lib/components/kindeditor/themes/default/default.css"/>{/block}
+{block name="body"}
+<div class="view-page">
+    <!-- 页面标题 -->
+    <div class="page-head">
+        <h6 class="padding-left page-head-title">属性查询-【{$pdetail.title}】
+        <span class="fr text-small text-normal padding-top"><b class="text-main"></b></span>
+        </h6>
+    </div>
+        
+    <div class="page-content">
+		<form name="formSearch" class="form-search form-inline" method="get" action="{:url('search')}">
+			<input type="hidden" name="pid" value="{$Think.get.pid??0}"/>
+		    <input type="text" class="form-control input-sm" name="keywords" id="keywords"  value="{$Think.get.keywords??''}" placeholder="属性名称" />
+		    <button type="submit" class="btn btn-sm  btn-purple ">搜索</button>
+		    <button type="button" class="btn btn-sm  btn-purple linkto-btn" data-url="/alliance/attribute/search/pid/0">查询一览</button>
+		</form>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class=" w5 text-center"><input type="checkbox" /></th>
+                    <th class=" w5">ID</th>
+                    <th class=" w10 ">属性图标</th>
+                    <th class=" w20 ">属性名称</th>
+                    <th class=" w10 text-center">排序</th>
+                    <th class=" w20 text-center">更新时间</th>
+                    <th class=" w20 text-center">操作</th>                 
+                </tr>
+            </thead>
+            <tbody>
+                {foreach name="list" item="item"}
+                <tr >
+                    <td class="text-center"><input class="margin-top-20" type="checkbox" /></td>
+                    <td>{$item.id}</td>
+                    <td><img class="image-uploader" src="{$item.icon}" data-id="{$item.id}" width="30" height="30"/></td>
+                    <td>{$item.title}</td> 
+                    <td class="text-center">	                    
+                    	<input id="sort{$item.id}" value="{$item.sort}" class="list_order form-control input-xs" data-id="{$item.id}" data-old="{$item.sort}" data-url="sort_edit.html"/>
+					</td>
+                    <td class="text-center">{$item.update_time}</td>
+                    <td class="text-center">
+                        <a class="text-mix   btn btn-xs btn-default confirm-rst-url-btn" href="/alliance/attribute/remove.html?id={$item.id}" data-info="你确定要删除吗？" title="删除"><i class="fa fa-trash"></i> 删除</a>&nbsp;
+                        <a class="text-main  btn btn-xs btn-default" href="###" data-toggle="modal" onclick="popModal('/alliance/attribute/pop_edit/id/{$item.id}')"  title="修改"><i class="fa fa-pencil"></i> 修改</a>
+                    	{if $item.pid == 0}
+                    	<a class="text-green  btn btn-xs btn-default" href="/alliance/attribute/search/pid/{$item.id}.html" title="属性列表"><i class="fa fa-list"></i> 属性列表</a>
+                    	{/if}
+                    </td>
+                </tr>
+                {/foreach}
+            </tbody>
+        </table>
+        <div class="non-info show">
+			<button type="button" class="btn btn-sm  btn-success" data-toggle="modal" onclick="popModal('/alliance/attribute/pop_edit/pid/{$pdetail.id}')" ><i class="fa fa-plus"></i> 新增分类</button>
+        </div>
+    </div>
+
+
+</div>
+{/block}
+{block name="script"}
+<script src="/lib/components/kindeditor/kindeditor-all.js"></script>
+
+
+<script>
+var $page = {};
+
+
+KindEditor.ready(function(K) {
+	K('.image-uploader').click(function() {
+		var imgObj = this;
+		var editor = K.editor({
+			allowFileManager : true,
+			uploadJson:"/alliance/attribute/icon_upload",
+			extraFileUploadParams:{id:$(imgObj).data('id')}
+		});
+		
+		editor.loadPlugin('image', function() {
+			editor.plugin.imageDialog({
+				showRemote:false,
+				clickFn : function(url, title, width, height, border, align) {
+					$(imgObj).attr('src',url);
+					editor.hideDialog();
+				}
+			});
+		});
+	});
+});
+
+$(function(){
+    
+	$(".status-btn").each(function(){
+        loadStatusBtn($(this));
+    })
+
+})
+</script>
+{/block}
