@@ -26,10 +26,13 @@ use app\alliance_api\model\AllianceTopiccomment;
 use app\core_api\model\User;
 
 class Grouptopic extends AppController{
+    protected $uncheckLogin = ['uploadImage'];
 	//初始化
 	public function _initialize(){
 		parent::_initialize();
-		$this->checkLogin();
+	   if(!in_array($this->request->action(), $this->uncheckLogin)){
+		    $this->checkLogin();
+		}
 	}
 	/**
 	 * 查询话题列表
