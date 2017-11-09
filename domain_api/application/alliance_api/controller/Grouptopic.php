@@ -29,15 +29,14 @@ class Grouptopic extends AppController{
 	//初始化
 	public function _initialize(){
 		parent::_initialize();
-
+		$this->checkLogin();
 	}
 	/**
-	 * 查询列表
+	 * 查询话题列表
 	 */
 	public function search(){
-	    $this->checkLogin();
 	    $search = $this->request->only('gid,total,page,keywords');
-	    $search['loginUid'] = $this->user['id'];
+	    $search['loginUid'] = $this->getUid();
 	    $pageData = GroupSvc::groupTopicList($search);
 	    return ['code'=>1,'msg'=>'查询成功','data'=>$pageData];
 	}
@@ -46,7 +45,6 @@ class Grouptopic extends AppController{
 	 * 详细
 	 */
 	public function detail(){
-	    $this->checkLogin();
 	    $detail = GroupSvc::groupTopicDetail($detail->id);
 	    return ['code'=>1,'msg'=>'操作成功','data'=>$detail];
 	}
@@ -55,7 +53,6 @@ class Grouptopic extends AppController{
 	 * 创建
 	 */
 	public function save(){
-	    $this->checkLogin();
 	    $data = $this->request->param();
 	    $group = AllianceGroup::get($data['gid']);
 	    //验证群是否存在
@@ -115,7 +112,6 @@ class Grouptopic extends AppController{
 	 * 删除话题
 	 */
 	public function remove(){
-	    $this->checkLogin();
 	    $topicid = $this->request->param('topicid');
 	    $topic = AllianceTopic::get($topicid);
 	    if($topic && $topic->uid == $this->user['id']){
@@ -130,7 +126,6 @@ class Grouptopic extends AppController{
 	 * 取得话题作者信息
 	 */
 	public function topicUser(){
-	    $this->checkLogin();
 	    $user = User::field('id,realname,avatar')->find($this->request->param('uid'));
 	    return ['code'=>1,'msg'=>'操作成功','data'=>$user];
 	}
@@ -149,7 +144,6 @@ class Grouptopic extends AppController{
 	 *  打赏
 	 */
 	public function memberReward(){
-	    $this->checkLogin();
 	    $data = $this->request->only('gid,topicid,payfee');
 	    
 	    $group = AllianceGroup::get($data['gid']);
@@ -190,7 +184,6 @@ class Grouptopic extends AppController{
 	 *  打赏成功
 	 */
 	public function memberRewardPaySuccess(){
-	    $this->checkLogin();
 	    $orderid = $this->request->param('orderid');
 	    $order = AllianceOrder::get($orderid);
 	    if($order){//订单存在，成员加入成功
@@ -212,7 +205,6 @@ class Grouptopic extends AppController{
 	 *  点赞
 	 */
 	public function memberLike(){
-	    $this->checkLogin();
 	    $params = $this->request->only('gid,topicid');
 	    $islike = true;
         $topic = AllianceTopic::field('id,likes,likearray')->find($params['topicid']);
@@ -243,7 +235,6 @@ class Grouptopic extends AppController{
 	 *  comment
 	 */
 	public function memberCommentSave(){
-	    $this->checkLogin();
 	    //验证是否群成员
 	    $member = AllianceGroupmember::where(['gid'=>$this->request->param('gid'),'uid'=>$this->user['id']])->find();
 	    if(empty($member)){
@@ -274,8 +265,6 @@ class Grouptopic extends AppController{
 	 *  删除comment
 	 */
 	public function memberCommentRemove(){
-	    $this->checkLogin();	     
-        
 	    $comment = AllianceTopiccomment::get($this->request->param('commentid'));
 	    if($comment && $comment->uid == $this->user['id']){
 	        $comment->delete(true);

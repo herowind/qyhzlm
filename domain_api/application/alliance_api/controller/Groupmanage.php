@@ -48,7 +48,11 @@ class Groupmanage extends AppController{
 	        $detail = AllianceGroup::get($data['id']);
 	        $detail->save($data);
 	    }else{
+	        if(empty($data['name'])||empty($data['fullname'])||empty($data['content'])){
+	            return ['code'=>0,'msg'=>'信息不完善'];
+	        }
 	        $data['uid'] = $this->user['id'];
+	        $data['type'] = 0;
 	        $data['createuid'] = $this->user['id'];
 	        $data['createrealname'] = $this->user['realname'];
 	        $detail = AllianceGroup::create($data);

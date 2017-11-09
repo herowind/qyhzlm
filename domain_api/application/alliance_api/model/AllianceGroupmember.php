@@ -42,7 +42,11 @@ class AllianceGroupmember extends CommonMod
         $pageData['page']['total'] = $listPage->total();
         return $pageData;
     }
-
+    /**
+     * 查询通讯录
+     * @param unknown $gid
+     * @param string $total
+     */
     public function getMemberListByGid($gid, $total = false)
     {
         $listPage = Db::view('AllianceGroupmember', 'uid,gid,isadmin,iscreator')->view('User', 'id,realname,avatar,city', "AllianceGroupmember.uid = User.id and AllianceGroupmember.gid={$gid}")->paginate(10, $total);
@@ -79,7 +83,12 @@ class AllianceGroupmember extends CommonMod
         $detail['isban'] = $this->getIsbanAttr($detail->bantime);
         return $detail;
     }    
-    
+    /**
+     * 通讯录，踢人，禁言，设置管理员
+     * @param unknown $gid
+     * @param array $cond
+     * @param string $total
+     */
     public function search($gid,$cond=[],$total=false)
     {
         $where[] = ['gid','=',$gid];

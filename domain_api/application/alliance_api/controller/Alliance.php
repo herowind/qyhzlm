@@ -16,7 +16,6 @@
 namespace app\alliance_api\controller;
 
 use app\common\controller\AppController;
-use app\alliance_api\service\AppCacheSvc;
 
 class Alliance extends AppController{
 	//初始化

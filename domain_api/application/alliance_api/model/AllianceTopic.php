@@ -20,7 +20,7 @@ class AllianceTopic extends CommonMod{
     //获得评论信息(非获取器)
     public function getCommentarrayAttr($value,$data){
         if($data['comments']>0){
-            $commentarray = AllianceTopiccomment::where(['topicid'=>$data['id']])->order('id')->limit(10)->select();
+            $commentarray = AllianceTopiccomment::where('topicid',$data['id'])->order('id')->limit(10)->select();
         }
         return empty($commentarray)?[]:$commentarray;
     }

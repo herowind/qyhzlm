@@ -16,7 +16,6 @@
 namespace app\alliance_api\model;
 
 use app\common\model\CommonMod;
-use app\alliance_api\service\AppCacheSvc;
 use think\Db;
 
 class AllianceGroup extends CommonMod{

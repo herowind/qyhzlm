@@ -39,7 +39,13 @@ class GroupSvc
             }
         }
     }
-
+    /**
+     * 查询登录用户
+     * @param unknown $group
+     * @param unknown $loginUid
+     * @param string $forceRefresh
+     * @return NULL|number|\app\alliance_api\model\AllianceGroupmember
+     */
     public static function groupUser($group, $loginUid, $forceRefresh = false)
     {
         if ($forceRefresh) {
@@ -147,12 +153,18 @@ class GroupSvc
         return $topList;
     }
 
+    /**
+     * 搜索话题列表
+     * @param unknown $search
+     */
     public static function groupTopicList($search){
+        // 获得社群
         $group = self::groupDetail($search['gid'], $search['loginUid']);
+        // 登录用户信息
         $groupUser = self::groupUser($group, $search['loginUid']);
         $topicMod = new AllianceTopic();
         if($groupUser['istopicvisibility']){
-            $where['gid'] = $search['gid'];
+            $where[] = ['gid','=',$search['gid']];
             if(isset($search['total']) && is_int($search['total']) && $search['total']>0){
                 //不查询总数量
             }else{
@@ -168,7 +180,7 @@ class GroupSvc
             $pageData['page']['nextPage'] = $listPage->currentPage()+1;
             $pageData['page']['total'] = $listPage->total();
         }else{
-            $where['gid'] = $search['gid'];
+            $where[] = ['gid','=',$search['gid']];
             $pageData['list'] = $topicMod->where($where)->order('istop desc , id desc')->limit(10)->select();
             $pageData['page']['hasMore']  = false;
             $pageData['page']['nextPage'] = 1;
@@ -179,7 +191,10 @@ class GroupSvc
         }
         return $pageData;
     }
-    
+    /**
+     * 搜索话题详情
+     * @param unknown $search
+     */
     public static function groupTopicDetail($topicid){
         $detail = AllianceTopic::get($topicid);
         $detail->append(['commentarray']);
