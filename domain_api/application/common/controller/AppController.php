@@ -38,9 +38,13 @@ class AppController{
 		$this->_initialize();
 	}
 	
+	protected function getUid(){
+	    return $this->user['id'];
+	}
+	
 	protected function checkLogin(){
 		$this->user = LoginService::checkwx($this->request->header());
-//		$this->user['id'] = 1;
+// 		$this->user['id'] = 1;
 // 		$this->user['realname'] = '洪涛';
 // 		$this->user['avatar'] = 'https://wx.qlogo.cn/mmopen/vi_32/FACQtw2ciaDIf6Vk5KKIZhT9pre33l9wXiayIiabcMMXYgGGoV3mObnB6xJibmYeKJGfW7BzaLZoTcvbIibGvowf9RA/0';
 // 		$this->user['openid'] = 'oU6sL0X04RA3KGQW_2a1gGRs7-l4';
