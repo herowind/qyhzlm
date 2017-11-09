@@ -26,7 +26,7 @@ use app\alliance_api\model\AllianceTopiccomment;
 use app\core_api\model\User;
 
 class Grouptopic extends AppController{
-    protected $uncheckLogin = ['uploadImage'];
+    protected $uncheckLogin = ['uploadimage'];
 	//初始化
 	public function _initialize(){
 		parent::_initialize();
