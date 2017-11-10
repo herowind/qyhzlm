@@ -259,7 +259,7 @@ class Grouptopic extends AppController{
 	    $commentData['realname'] = $this->user['realname'];
 	    $comment = AllianceTopiccomment::create($commentData);
 	    //增加数量
-	    AllianceTopic::update(['comments'=>['exp','comments+1']],['id'=>$commentData['topicid']]);
+	    AllianceTopic::where('id',$commentData['topicid'])->update(['comments'=>['exp','comments+1']]);
 	    if($comment){
 	        return ['code'=>1,'msg'=>'评论成功','data'=>$comment];
 	    }else{
