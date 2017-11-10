@@ -239,7 +239,11 @@ class Grouptopic extends AppController{
 	 */
 	public function memberCommentSave(){
 	    //验证是否群成员
-	    $member = AllianceGroupmember::where(['gid'=>$this->request->param('gid'),'uid'=>$this->user['id']])->find();
+	    $where = [
+	      ['gid','=',$this->request->param('gid')],
+	      ['uid','=',$this->getUid()],
+	    ];
+	    $member = AllianceGroupmember::where($where)->find();
 	    if(empty($member)){
 	        return ['code'=>0,'msg'=>'您还未加入'];
 	    }
